@@ -1,5 +1,23 @@
 injectScripts();
 
+//监听pop调用消息
+chrome.extension.onMessage.addListener(
+	function (request, sender, sendMessage) {
+		var dom = document.getElementById("allWvKeys");
+		if (request.action == "getAllKeys"){
+			if (dom) sendMessage(dom.innerHTML);
+		}
+	}
+);
+
+//监听更新图标消息
+window.addEventListener("message", function (e) {
+	if(e.data.action == "noticeKey"){
+		chrome.runtime.sendMessage({ badgeText: e.data.count });
+	}
+}, false);
+
+
 async function injectScripts() 
 {
 	await injectScript('lib/pbf.3.0.5.min.js');
