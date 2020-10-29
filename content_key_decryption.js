@@ -96,26 +96,17 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
             contentKeys.push(decryptedKey);
             console.log("WidevineDecryptor: Found key: " + toHexString(decryptedKey) + " (KID=" + toHexString(keyId) + ")");
             try {
-                if (!window.allWvKeys){
-                    window.allWvKeys = new Array();
+                if (!window.__wvcounter)
                     window.__wvcounter = 0;
-                }
-                if (!document.getElementById("allWvKeys")){
-                    var _div = document.createElement("div");
-                    _div.id = "allWvKeys";
-                    _div.style = "display: hidden";
-                    document.body.appendChild(_div);
-                }
                 let _kid = toHexString(keyId);
                 let _hex = toHexString(decryptedKey);
                 let _data = { kid: _kid, base64_key: btoa(String.fromCharCode.apply(null, new Uint8Array(decryptedKey))), hex_key: _hex };
-                if (JSON.stringify(window.allWvKeys).indexOf(JSON.stringify(_data)) == -1) {
-                    window.allWvKeys.push(_data);
-                    document.getElementById("allWvKeys").innerHTML = JSON.stringify(window.allWvKeys);
-                    window.postMessage({ action: "noticeKey", count: (++__wvcounter).toString()}); //处理逻辑在content_script
+                if (!document.getElementById(escape(JSON.stringify(_data)))) {
+                    window.postMessage({ action: "pushKey", data: _data });
+                    window.postMessage({ action: "noticeKey", count: (++__wvcounter).toString() }); //处理逻辑在content_script
                 }
             } catch (e) {
-                ;
+                console.log(e)
             }
         }
 

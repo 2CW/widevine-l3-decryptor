@@ -22,3 +22,25 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         });
     }
 });
+
+String.prototype.contains = function (str) {
+    return this.indexOf(str) != -1;
+}
+
+String.prototype.startsWith = function (str) {
+    return this.indexOf(str) == 0;
+}
+
+
+// web请求监听
+chrome.webRequest.onBeforeRequest.addListener(details => {
+    let url = details.url;
+    if (url.startsWith("https")
+     && (url.contains(".mpd")) || (url.contains("pl-ali.youku.com") && url.contains("cmaf"))){
+        console.log(url);
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            //console.log(tabs)
+            chrome.tabs.sendMessage(tabs[0].id, { action: "addMpdUrl", mpd_url: url }, function (response) { console.log(response) });
+        });
+    };
+}, { urls: ["https://*/*"] }, []);

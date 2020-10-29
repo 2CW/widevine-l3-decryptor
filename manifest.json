@@ -9,7 +9,10 @@
       "background.js"
     ]
   },
-  "permissions": ["notifications"],
+  "permissions": [
+    "webRequest",
+    "https://*/*"
+  ],
   "icons": {},
   "browser_action": {
     "default_popup": "popup.html"
@@ -31,7 +34,8 @@
     "content_key_decryption.js",
     "eme_interception.js",
     "lib/*",
-    "protobuf-generated/*"
+    "protobuf-generated/*",
+    "inject_mpd.js"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
