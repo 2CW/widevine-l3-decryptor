@@ -21,13 +21,23 @@ chrome.runtime.onMessage.addListener(
 		}
 		//pop调用消息
 		else if (request.action == "getWvData") {
+			//只在顶级窗口做出响应
 			if (window.self === window.top) {
 				let data = new Array();
+				//这里需要再次去重
 				var eles = document.getElementsByClassName("wv_decryptor_data");
 				Array.prototype.forEach.call(eles, function (ele) {
-					data.push(JSON.parse(ele.value));
+					if (JSON.stringify(data).indexOf(ele.value) == -1)
+						data.push(JSON.parse(ele.value));
 				});
-				console.log(data)
+				//遍历iframes
+				Array.prototype.forEach.call(document.getElementsByTagName("iframe"), function (frame) {
+					let _eles = frame.contentWindow.document.getElementsByClassName("wv_decryptor_data");
+					Array.prototype.forEach.call(_eles, function (ele) {
+						if (JSON.stringify(data).indexOf(ele.value) == -1)
+							data.push(JSON.parse(ele.value));
+					});
+				});
 				sendResponse(data);
 			}
 		}
