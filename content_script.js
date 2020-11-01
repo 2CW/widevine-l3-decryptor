@@ -14,8 +14,8 @@ chrome.runtime.onMessage.addListener(
 			_input.style = "display: none";
 			_input.value = JSON.stringify({ mpd_url: request.mpd_url });
 			_input.id = escape(_input.value);
-			if (!document.getElementById(_input.id))
-				document.body.appendChild(_input);
+			if (!window.top.document.getElementById(_input.id))
+				window.top.document.body.appendChild(_input);
 
 			sendResponse('found mpd_url!');
 		}
@@ -30,14 +30,14 @@ chrome.runtime.onMessage.addListener(
 					if (JSON.stringify(data).indexOf(ele.value) == -1)
 						data.push(JSON.parse(ele.value));
 				});
-				//遍历iframes
-				Array.prototype.forEach.call(document.getElementsByTagName("iframe"), function (frame) {
-					let _eles = frame.contentWindow.document.getElementsByClassName("wv_decryptor_data");
-					Array.prototype.forEach.call(_eles, function (ele) {
-						if (JSON.stringify(data).indexOf(ele.value) == -1)
-							data.push(JSON.parse(ele.value));
-					});
-				});
+				// //遍历iframes
+				// Array.prototype.forEach.call(document.getElementsByTagName("iframe"), function (frame) {
+				// 	let _eles = frame.contentWindow.document.getElementsByClassName("wv_decryptor_data");
+				// 	Array.prototype.forEach.call(_eles, function (ele) {
+				// 		if (JSON.stringify(data).indexOf(ele.value) == -1)
+				// 			data.push(JSON.parse(ele.value));
+				// 	});
+				// });
 				sendResponse(data);
 			}
 		}
@@ -57,7 +57,7 @@ window.addEventListener("message", function (e) {
 		_input.style = "display: none";
 		_input.value = JSON.stringify(e.data.data);
 		_input.id = escape(_input.value);
-		document.body.appendChild(_input);
+		window.top.document.body.appendChild(_input);
 	}
 }, false);
 

@@ -101,7 +101,7 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
                 let _kid = toHexString(keyId);
                 let _hex = toHexString(decryptedKey);
                 let _data = { kid: _kid, base64_key: btoa(String.fromCharCode.apply(null, new Uint8Array(decryptedKey))), hex_key: _hex };
-                if (!document.getElementById(escape(JSON.stringify(_data)))) {
+                if (!window.top.document.getElementById(escape(JSON.stringify(_data)))) {
                     window.postMessage({ action: "pushKey", data: _data });
                     window.postMessage({ action: "noticeKey", count: (++__wvcounter).toString() }); //处理逻辑在content_script
                 }
